@@ -1,38 +1,54 @@
 import { test, expect } from '@playwright/test';
 
+
+/*
+----HUGHES LAYOUT----
+WEST SIDE
+1st: 102, 103, 104, 105, 106, 107, 108, 109, 112, 113, 114, 115
+2nd: 201, 202, 203, 204, 205, 206, 207, 208, 209, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226
+3rd: 301, 302, 303, 304, 305, 306, 307, 308, 309, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326
+
+EAST SIDE
+1st: 128, 130, 132, 133, 135, 136, 137, 140, 142, 144, 146, 152
+2nd: 227, 228, 229, 230, 231, 233, 234, 235, 236, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247
+3rd: 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 338, 339, 340, 341, 342, 343, 344, 345, 346, 347
+*/
+
 //Website Information
 const roompactEmail = 'sgovitz@cub.uca.edu';  //Email to log into roompact
 const username = 'sgovitz';  //username to log into MyUCA
 const password = 'Legobob-12!'; //Password to log into MyUCA
-const date = '02/05/2025'; //Ex. mm/dd/year
+const date = '02/07/2025'; //Ex. mm/dd/year
 
 //Update this with all the rooms that passed****************
-const pass = [];
+const pass = [237, 237];
 
-//Ex. 1 -> Keyed into room
-//    0 -> Did not key into room
-const passKey = [];
+//Ex. [1, 0]  <--Make sure to add commas after each number
+// 1 -> Keyed into room
+// 0 -> Did not key into room
+const passKey = [1, 0];
 
 //Update this with all the rooms that failed****************
-const fail = []; 
+const fail = [237, 237, 237]; 
 
-//Ex. 1 -> Keyed into room
-//    0 -> Did not key into room
-const failKey = [];
+//Ex. [1, 0]  <--Make sure to add commas after each number
+// 1 -> Keyed into room
+// 0 -> Did not key into room
+const failKey = [0, 1, 1];
 
-//Ex. 1 -> Clean: This room failed because room was dirty
-//    0 -> Illegal: This room failed because it had illegal decorations (alcohol, candles, microwave, etc)
-//    2 -> Both; This room failed because it was dirty and had illegal decorations
-const failType = [];
+//Ex. [1, 2, 0]  <--Make sure to add commas after each number
+// 1 -> Clean: This room failed because room was dirty
+// 0 -> Illegal: This room failed because it had illegal decorations (alcohol, candles, microwave, etc)
+// 2 -> Both; This room failed because it was dirty and had illegal decorations
+const failType = [1, 2, 0];
 
 //Write the reason why you are failing them (Make sure each note is in the same order where the room number is above^^)
-//Ex. Room failed because of dirty sink, marked in roompact, <----Make sure to add comma after each note
-//    Room failed because of alcohol                         <----Last note does not need a comma
+//Ex. "Room failed because of dirty sink, marked in roompact", <----Make sure to add quotations around each note and acomma after each note
+//    "Room failed because of alcohol"                         <----Last note does not need a comma
 const notes = [
-
-
-
-
+"Room failed because of dirty sink, marked in roompact (Void)",
+"Room failed because of alcohol and dirty room (Void)",
+"Room failed because of alcohol (Void)" 
 
 ];
 
@@ -73,8 +89,8 @@ test('test', async ({ page }) => {
         await page.getByRole('textbox', { name: 'Tag Buildings' }).fill('Hughes');
         await page.locator('div').filter({ hasText: /^Hughes Hall$/ }).nth(4).click();
         await page.getByRole('textbox', { name: 'Tag Suites or Rooms' }).click();
-        await page.getByRole('textbox', { name: 'Tag Suites or Rooms' }).fill(pass[i]); //<-Need quotes to make string?
-        await page.getByText('Hughes Hall - 2 - Room ' + pass[i]).click();
+        await page.getByRole('textbox', { name: 'Tag Suites or Rooms' }).fill("'" + pass[i] + "'"); //<-Need quotes to make string?
+        await page.getByText('Hughes Hall - 2 - Room ' + "'" + pass[i] + "' (RA)").click();  //<-Remove RA in final product
 
         /******************************************************
          If you keyed in for that specific room, this part will run
@@ -124,8 +140,8 @@ test('test', async ({ page }) => {
     await page.getByRole('textbox', { name: 'Tag Buildings' }).fill('Hughes');
     await page.locator('div').filter({ hasText: /^Hughes Hall$/ }).nth(4).click();
     await page.getByRole('textbox', { name: 'Tag Suites or Rooms' }).click();
-    await page.getByRole('textbox', { name: 'Tag Suites or Rooms' }).fill(pass[i]); //<-Need quotes to make string?
-    await page.getByText('Hughes Hall - 2 - Room ' + pass[i]).click();
+    await page.getByRole('textbox', { name: 'Tag Suites or Rooms' }).fill("'" + fail[i] + "'"); //<-Need quotes to make string?
+    await page.getByText('Hughes Hall - 2 - Room ' + "'" + fail[i] + "' (RA)").click(); //<-Remove RA in final product
 
     /******************************************************
      If you keyed in for that specific room, this part will run
@@ -177,7 +193,7 @@ test('test', async ({ page }) => {
 
     await page.getByRole('group', { name: 'This room has passed my' }).getByLabel('No').check();
     await page.getByRole('textbox', { name: 'Notes:' }).click();
-    await page.getByRole('textbox', { name: 'Notes:' }).fill(notes[i]); //<-May need quotes
+    await page.getByRole('textbox', { name: 'Notes:' }).fill("'" + notes[i] + "'"); //<-May need quotes
     await page.getByRole('button', { name: 'Submit ' }).click();
     await page.getByRole('button', { name: ' File Form' }).click();
    }
